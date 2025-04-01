@@ -32,7 +32,7 @@ class Hexagon(pygame.sprite.Sprite):
 
     def get_x(self):
         if self.col % 2 == 0:
-            return int((self.col * (self.radius * 2))+(self.radius/2))
+            return int((self.col * (self.radius * 2))+(self.radius * 0.2))
         return int(self.col * (self.radius * 2))
         '''if self.col % 2 == 0:
             return int(((self.radius) * self.col) + self.radius)
@@ -41,7 +41,7 @@ class Hexagon(pygame.sprite.Sprite):
     
     def get_y(self):
         if self.col % 2 == 0:
-            return int((self.row * (self.size *2))+(self.size/2))
+            return int((self.row * (self.size *2))+(self.size*0.98))
         return int(self.row * (self.size *2))
         #if self.row % 2 == 0:
         '''           return int(((self.radius) * self.col) + self.radius)
