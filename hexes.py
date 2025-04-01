@@ -16,6 +16,7 @@ class Hexagon(pygame.sprite.Sprite):
         self.row = row
         self.position = pygame.Vector2(self.get_x(), self.get_y())
         self.corners = []
+        self.circle_color = "red"
         for i in range(0,6):
             self.corners.append(self.hex_corner(i))
         
@@ -31,9 +32,9 @@ class Hexagon(pygame.sprite.Sprite):
         return (int(self.position.x + self.size * math.cos(angle_radius)), int(self.position.y + self.size * math.sin(angle_radius)))
 
     def get_x(self):
-        if self.col % 2 == 0:
-            return int((self.col * (self.radius * 2))+(self.radius * 0.2))
-        return int(self.col * (self.radius * 2))
+        '''if self.col % 2 == 0:
+            return int((self.col * (self.radius * 2)))'''
+        return int(self.col * (self.radius * HEX_X_OFFSET))
         '''if self.col % 2 == 0:
             return int(((self.radius) * self.col) + self.radius)
         return int(((self.radius) * self.col) - self.radius)
@@ -41,8 +42,8 @@ class Hexagon(pygame.sprite.Sprite):
     
     def get_y(self):
         if self.col % 2 == 0:
-            return int((self.row * (self.size *2))+(self.size*0.98))
-        return int(self.row * (self.size *2))
+            return int((self.row * (self.size * HEX_Y_OFFSET))+(self.radius))
+        return int(self.row * (self.size * HEX_Y_OFFSET))
         #if self.row % 2 == 0:
         '''           return int(((self.radius) * self.col) + self.radius)
         return int(((self.radius) * self.col) - self.radius)
@@ -50,4 +51,9 @@ class Hexagon(pygame.sprite.Sprite):
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.corners, 2)
+        pygame.draw.circle(screen, self.circle_color, self.position, self.radius)
 
+    def collision(self, other):
+        if other.position.distance_to(self.position) < (self.radius + other.radius):
+            return True
+        return False
