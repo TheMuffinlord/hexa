@@ -146,6 +146,15 @@ class hex_unit_polar(Hexagon_Polar):
             self.wrap_edges()
             self.timer = INPUT_WAIT_TIMER
 
+    def move_back(self):
+        #hey y'all wanna see some bullshit
+        old_facing = self.facing
+        self.facing -= 180
+        if self.facing < 0:
+            self.facing += 360
+        self.move_fwd()
+        self.facing = old_facing
+
     def update(self, dt):
         self.timer -= dt
         keys = pygame.key.get_pressed()
@@ -155,6 +164,6 @@ class hex_unit_polar(Hexagon_Polar):
             self.rotate("r")
         if keys[pygame.K_w]:
             self.move_fwd()
-        #if keys[pygame.K_s]:
-        #    self.move(dt * -1)
+        if keys[pygame.K_s]:
+            self.move_back()
         self.position = pygame.Vector2(self.get_x(), self.get_y())
