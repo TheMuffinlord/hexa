@@ -2,18 +2,8 @@ import pygame, sys
 from constants import *
 from hexes import *
 from units import *
+from mapgen import *
 
-def fill_map():
-    hexmap = []
-    for row in range(MAP_ROWS):
-        #if row % 2 == 1:
-            #
-            # new_y = hex1.radius + (row * HEX_SIZE)
-        #else:
-            #cry i guess
-        for col in range(MAP_COLS):
-            new_hex = Hexagon(col, row)
-            hexmap.append(new_hex)
 
 def main():
     pygame.init()
@@ -29,6 +19,7 @@ def main():
     updatable = pygame.sprite.Group()
 
     Hexagon.containers = (drawable, updatable)
+    Hexagon_Polar.containers = (drawable, updatable)
     hex_unit.containers = (drawable, updatable)
 
     #hex1 = Hexagon(0,0)
@@ -36,8 +27,8 @@ def main():
     #    print(corner)
     #print(hex1.hex_width())
     #hex2 = Hexagon(1,1)
-    fill_map()
-    unit1 = hex_unit(4,4,60)
+    fill_map_polar()
+    unit1 = hex_unit_polar(0,0,60)
     """unit2 = hex_unit(2,2,60)
     unit3 = hex_unit(3,3,120)
     unit2 = hex_unit(4,4,180)
