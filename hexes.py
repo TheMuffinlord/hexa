@@ -9,7 +9,7 @@ class Hexagon(pygame.sprite.Sprite):
             super().__init__()
         #self.position = pygame.Vector2(row*HEX_SIZE, col*HEX_SIZE)
         self.size = HEX_SIZE #zoom logic will go here eventually ig
-        self.radius = HEX_SIZE/2
+        self.radius = int(self.size * math.cos(math.radians(30)))
         #self.half_height = math.sqrt((self.size * 2) - (self.radius*2))
         #pos_x = col * 
         self.col = col
@@ -19,11 +19,11 @@ class Hexagon(pygame.sprite.Sprite):
         for i in range(0,6):
             self.corners.append(self.hex_corner(i))
         
-    def hex_width(self):
-        return self.size * math.cos(math.radians(30))
+    """ def hex_width(self):
+        return int(self.size * math.cos(math.radians(30)))
     
     def hex_height(self):
-        return self.size * math.sin(math.radians(30))
+        return int(self.size * math.sin(math.radians(30))) """
 
     def hex_corner(self, corner):
         angle_degrees = 60 * corner
@@ -32,15 +32,21 @@ class Hexagon(pygame.sprite.Sprite):
 
     def get_x(self):
         if self.col % 2 == 0:
-            return int(self.col * self.size*2)
-        return int(self.col * (self.size * 1.5))
-        #return int(self.col * ((math.sqrt(3) * (self.size/2))))
+            return int((self.col * (self.radius * 2))+(self.radius/2))
+        return int(self.col * (self.radius * 2))
+        '''if self.col % 2 == 0:
+            return int(((self.radius) * self.col) + self.radius)
+        return int(((self.radius) * self.col) - self.radius)
+        #return int(self.col * ((math.sqrt(3) * (self.size/2))))'''
     
     def get_y(self):
-        if self.row % 2 == 0:
-            return int(self.row * self.size)
-        return int(self.row * (self.size*0.75))
-        #return int(self.row * (self.hex_height()*2+2))
+        if self.col % 2 == 0:
+            return int((self.row * (self.size *2))+(self.size/2))
+        return int(self.row * (self.size *2))
+        #if self.row % 2 == 0:
+        '''           return int(((self.radius) * self.col) + self.radius)
+        return int(((self.radius) * self.col) - self.radius)
+        #return int(self.row * (self.hex_height()*2+2))'''
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.corners, 2)
