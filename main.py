@@ -37,14 +37,20 @@ def main():
     #print(hex1.hex_width())
     #hex2 = Hexagon(1,1)
     fill_map()
-    unit1 = hex_unit(1,1,60)
-    unit2 = hex_unit(3,5,120)
+    unit1 = hex_unit(4,4,60)
+    """unit2 = hex_unit(2,2,60)
+    unit3 = hex_unit(3,3,120)
+    unit2 = hex_unit(4,4,180)
+    unit5 = hex_unit(5,5,240)
+    unit6 = hex_unit(6,6,300) """
     #print(len(hexmap))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         pygame.Surface.fill(screen, "black")
+        for item in updatable:
+            item.update(dt)
         for item in drawable:
             item.draw(screen)
         pygame.display.flip()

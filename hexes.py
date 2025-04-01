@@ -57,3 +57,6 @@ class Hexagon(pygame.sprite.Sprite):
         if other.position.distance_to(self.position) < (self.radius + other.radius):
             return True
         return False
+
+    def update(self, dt):
+        pass
