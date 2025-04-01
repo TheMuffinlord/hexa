@@ -51,7 +51,7 @@ class Hexagon(pygame.sprite.Sprite):
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.corners, 2)
-        pygame.draw.circle(screen, self.circle_color, self.position, self.radius)
+        #pygame.draw.circle(screen, self.circle_color, self.position, self.radius)
 
     def collision(self, other):
         if other.position.distance_to(self.position) < (self.radius + other.radius):

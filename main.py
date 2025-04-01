@@ -1,6 +1,7 @@
 import pygame, sys
 from constants import *
 from hexes import *
+from units import *
 
 def fill_map():
     hexmap = []
@@ -24,9 +25,11 @@ def main():
     #doing p good not to eat shit at this stage
    
 
-    hexfield = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    updatable = pygame.sprite.Group()
 
-    Hexagon.containers = (hexfield)
+    Hexagon.containers = (drawable, updatable)
+    hex_unit.containers = (drawable, updatable)
 
     #hex1 = Hexagon(0,0)
     #for corner in hex1.corners:
@@ -34,14 +37,16 @@ def main():
     #print(hex1.hex_width())
     #hex2 = Hexagon(1,1)
     fill_map()
+    unit1 = hex_unit(1,1,60)
+    unit2 = hex_unit(3,5,120)
     #print(len(hexmap))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         pygame.Surface.fill(screen, "black")
-        for hexagon in hexfield:
-            hexagon.draw(screen)
+        for item in drawable:
+            item.draw(screen)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk
