@@ -97,14 +97,16 @@ class hex_unit_polar(Hexagon_Polar):
         return [a, b, c]
 
     def wrap_edges(self):
+        max_r = max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE)
+        min_r = min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE)
         if self.q < -MAP_POLAR_SIZE:
             self.q += MAP_POLAR_SIZE *2
         if self.q > MAP_POLAR_SIZE:
             self.q -= MAP_POLAR_SIZE *2
-        if self.r < max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE):
-            self.r += min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE)
-        if self.r > min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE):
-            self.r -= max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE)
+        if self.r > max_r:
+            self.r = min_r
+        if self.r < min_r:
+            self.r = max_r
 
 
     def draw(self, screen):
@@ -166,4 +168,7 @@ class hex_unit_polar(Hexagon_Polar):
             self.move_fwd()
         if keys[pygame.K_s]:
             self.move_back()
+        if keys[pygame.K_SPACE]:
+            self.q = 0
+            self.r = 0
         self.position = pygame.Vector2(self.get_x(), self.get_y())

@@ -27,7 +27,9 @@ def main():
     #    print(corner)
     #print(hex1.hex_width())
     #hex2 = Hexagon(1,1)
-    fill_map_polar()
+    hexmap = []
+    coordmap = []
+    fill_map_polar(hexmap, coordmap)
     unit1 = hex_unit_polar(0,0,60)
     """unit2 = hex_unit(2,2,60)
     unit3 = hex_unit(3,3,120)
@@ -45,7 +47,8 @@ def main():
         for item in drawable:
             item.draw(screen)
         debug_text = f" unit 1 q: {unit1.q},  unit 1 r: {unit1.r}"
-        debug_box(screen, debug_text)
+        debug_text2 = f"max_r :{max(-MAP_POLAR_SIZE, -unit1.q - MAP_POLAR_SIZE)} min_r: {min(MAP_POLAR_SIZE, -unit1.q + MAP_POLAR_SIZE)}"
+        debug_box(screen, debug_text, debug_text2)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk
