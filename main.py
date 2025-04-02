@@ -3,7 +3,7 @@ from constants import *
 from hexes import *
 from units import *
 from mapgen import *
-
+from textbox import *
 
 def main():
     pygame.init()
@@ -44,6 +44,8 @@ def main():
             item.update(dt)
         for item in drawable:
             item.draw(screen)
+        debug_text = f" unit 1 q: {unit1.q},  unit 1 r: {unit1.r}"
+        debug_box(screen, debug_text)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk

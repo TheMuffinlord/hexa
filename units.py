@@ -98,12 +98,12 @@ class hex_unit_polar(Hexagon_Polar):
 
     def wrap_edges(self):
         if self.q < -MAP_POLAR_SIZE:
-            self.q += MAP_POLAR_SIZE +1
-        if self.q > MAP_POLAR_SIZE +1 :
-            self.q -= MAP_POLAR_SIZE -1
+            self.q += MAP_POLAR_SIZE *2
+        if self.q > MAP_POLAR_SIZE:
+            self.q -= MAP_POLAR_SIZE *2
         if self.r < max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE):
-            self.r += min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE) + 1
-        if self.r > min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE) + 1:
+            self.r += min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE)
+        if self.r > min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE):
             self.r -= max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE)
 
 
