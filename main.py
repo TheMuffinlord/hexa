@@ -30,6 +30,7 @@ def main():
     hexmap = []
     coordmap = []
     fill_map_polar(hexmap, coordmap)
+    print(coordmap)
     unit1 = hex_unit_polar(0,0,60)
     """unit2 = hex_unit(2,2,60)
     unit3 = hex_unit(3,3,120)
