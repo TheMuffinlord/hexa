@@ -141,7 +141,11 @@ class hex_unit_polar(Hexagon_Polar):
                 self.q = high_edge(self.r)
         #check facing
         #depending on angle faced, 
-        
+    
+    def over_edge(self):
+        bound_check = lambda x: x not in range(-MAP_POLAR_SIZE, MAP_POLAR_SIZE+1)
+        return bound_check(self.q) or bound_check(self.r) or bound_check(self.get_s())
+
     def check_facing(self):
         return self.facing // 60
 
@@ -163,25 +167,58 @@ class hex_unit_polar(Hexagon_Polar):
                 self.facing = self.facing // 60
             self.timer = INPUT_WAIT_TIMER
 
+    #six commands to move in every direction
+    def move_up(self):
+        self.r -= 1
+        if self.over_edge():
+            self.r += 1
+
+    def move_down(self):
+        self.r += 1
+        if self.over_edge():
+            self.r -= 1 
+    
+    def move_ul(self):
+        self.q -= 1
+        if self.over_edge():
+            self.q += 1
+    
+    def move_dl(self):
+        self.q -= 1
+        self.r += 1
+        if self.over_edge():
+            self.q += 1
+            self.r -= 1
+
+    def move_ur(self):
+        self.q += 1
+        self.r -= 1
+        if self.over_edge():
+            self.q -= 1
+            self.r += 1
+
+    def move_dr(self):
+        self.q += 1
+        if self.over_edge():
+            self.q -= 1
+
     def move_fwd(self):
         if self.timer <= 0:
         #oh boy now we hit that six directional logic
             face = self.check_facing()
             if face == 0 or face == 6: #down
-                self.r += 1
+                self.move_down()
             if face == 3: #up
-                self.r -= 1
+                self.move_up()
             if face == 1: #down left
-                self.q -= 1
-                self.r += 1
+                self.move_dl()
             if face == 2: #up left
-                self.q -= 1
+                self.move_ul()
             if face == 4: #up right
-                self.q += 1
-                self.r -= 1
+                self.move_ur()
             if face == 5: #down right
-                self.q += 1
-            self.wrap_edges()
+                self.move_dr()
+            #self.wrap_edges()
             self.timer = INPUT_WAIT_TIMER
 
     def move_back(self):
