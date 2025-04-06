@@ -246,6 +246,9 @@ class hex_unit_polar(Hexagon_Polar):
         elif keys == pygame.K_ESCAPE:
             print("escape pressed, quitting")
             pygame.event.post(pygame.event.Event(pygame.QUIT))
+        elif keys:
+            self.active = False
+            
 
 
         self.position = pygame.Vector2(self.get_x(), self.get_y())
