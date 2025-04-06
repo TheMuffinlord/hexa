@@ -137,7 +137,11 @@ class hex_unit_polar(Hexagon_Polar):
         return self.facing // 60
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle())
+        if self.active == True:
+            color = "yellow"
+        else:
+            color = "white"
+        pygame.draw.polygon(screen, color, self.triangle())
 
     def rotate(self, lr):
         if self.timer_check():
@@ -219,28 +223,27 @@ class hex_unit_polar(Hexagon_Polar):
         self.move_fwd()
         self.facing = old_facing
 
-    def update(self, dt):
+    def update(self, dt, keys):
         self.timer_tick(dt)
-        keys = pygame.key.get_pressed()
         print("waiting on key press")
         #if self.active:
-        if keys[pygame.K_a]:
+        if keys == pygame.K_a:
             print("A pressed")
             self.rotate("l")
-        elif keys[pygame.K_d]:
+        elif keys == pygame.K_d:
             print("D pressed")
             self.rotate("r")
-        elif keys[pygame.K_w]:
+        elif keys == pygame.K_w:
             print("W pressed")
             self.move_fwd()
-        elif keys[pygame.K_s]:
+        elif keys== pygame.K_s:
             print("S pressed")
             self.move_back()
-        elif keys[pygame.K_SPACE]:
+        elif keys == pygame.K_SPACE:
             print("space bar pressed")
             self.q = 0
             self.r = 0
-        elif keys[pygame.K_ESCAPE]:
+        elif keys == pygame.K_ESCAPE:
             print("escape pressed, quitting")
             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
