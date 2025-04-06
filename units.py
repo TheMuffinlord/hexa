@@ -92,6 +92,9 @@ class hex_unit_polar(Hexagon_Polar):
     
     def timer_check(self):
         return self.timer <= 0
+    
+    def timer_tick(self, dt):
+        self.timer -= dt
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.facing)
@@ -158,7 +161,7 @@ class hex_unit_polar(Hexagon_Polar):
         pygame.draw.polygon(screen, "white", self.triangle())
 
     def rotate(self, lr):
-        if self.timer_check():
+        if self.timer_check() and self.active:
         #simple version to test logic
             if lr == "l":
                 self.facing -= 60
@@ -171,6 +174,7 @@ class hex_unit_polar(Hexagon_Polar):
             if self.facing % 60 != 0:
                 self.facing = self.facing // 60
             self.timer = INPUT_WAIT_TIMER
+            self.active = False
 
     #six commands to move in every direction
     def move_up(self):
@@ -208,7 +212,7 @@ class hex_unit_polar(Hexagon_Polar):
             self.q -= 1
 
     def move_fwd(self):
-        if self.timer_check():
+        if self.timer_check() and self.active:
         #oh boy now we hit that six directional logic
             face = self.check_facing()
             if face == 0 or face == 6: #down
@@ -224,6 +228,7 @@ class hex_unit_polar(Hexagon_Polar):
             if face == 5: #down right
                 self.move_dr()
             #self.wrap_edges()
+            self.active = False
             self.timer = INPUT_WAIT_TIMER
 
     def move_back(self):
@@ -236,24 +241,31 @@ class hex_unit_polar(Hexagon_Polar):
         self.facing = old_facing
 
     def update(self, dt):
-        self.timer -= dt
+        self.timer_tick(dt)
         keys = pygame.key.get_pressed()
-        if keys:
-            if keys[pygame.K_a]:
-                self.rotate("l")
-            if keys[pygame.K_d]:
-                self.rotate("r")
-            if keys[pygame.K_w]:
-                self.move_fwd()
-            if keys[pygame.K_s]:
-                self.move_back()
-            if keys[pygame.K_SPACE]:
-                self.q = 0
-                self.r = 0
-            if keys[pygame.K_ESCAPE]:
-                pygame.event.post(pygame.event.Event(pygame.QUIT))
-            self.position = pygame.Vector2(self.get_x(), self.get_y())
-        self.active = False
+        #print("waiting on key press")
+        if keys[pygame.K_a]:
+            print("A pressed")
+            self.rotate("l")
+        elif keys[pygame.K_d]:
+            print("D pressed")
+            self.rotate("r")
+        elif keys[pygame.K_w]:
+            print("W pressed")
+            self.move_fwd()
+        elif keys[pygame.K_s]:
+            print("S pressed")
+            self.move_back()
+        elif keys[pygame.K_SPACE]:
+            print("space bar pressed")
+            self.q = 0
+            self.r = 0
+        elif keys[pygame.K_ESCAPE]:
+            print("escape pressed, quitting")
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+        self.position = pygame.Vector2(self.get_x(), self.get_y())
+
 
 
 

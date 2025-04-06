@@ -17,7 +17,7 @@ def main():
 
     drawable = pygame.sprite.Group()
     updatable = pygame.sprite.Group()
-
+    moved_units = pygame.sprite.Group()
     #Hexagon.containers = (drawable)
     Hexagon_Polar.containers = (drawable)
     hex_unit_polar.containers = (drawable, updatable)
@@ -38,25 +38,24 @@ def main():
     unit5 = hex_unit(5,5,240)
     unit6 = hex_unit(6,6,300) """
     #print(len(hexmap))
-    debug_text2 = ""
+    #debug_text2 = ""
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         pygame.Surface.fill(screen, "black")
         for item in updatable:
-            while item.active == True:
+            if item.active == False:
+                item.active = True
                 active_unit = item.name
-                debug_text2 = f"active unit: {active_unit}"
-                item.update(dt)
-            item.active = True
-
+                print(f"active unit: {active_unit}")
+                item.update(dt)        
         for item in drawable:
             item.draw(screen)
         
         debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
 
-        debug_box(screen, debug_text, debug_text2)
+        #debug_box(screen, debug_text, debug_text2)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk
