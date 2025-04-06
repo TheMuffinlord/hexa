@@ -79,6 +79,8 @@ class Hexagon_Polar(pygame.sprite.Sprite):
         self.s = (q * -1)-r #three dimension axial
         self.position = pygame.Vector2(self.get_x(), self.get_y())
         self.corners = []
+        self.all_neighbors = [(self.q+1, self.r), (self.q+1, self.r-1), (self.q, self.r-1), (self.q-1, self.r), (self.q-1, self.r+1), (self.q, self.r+1)]
+        self.valid_neighbors = []
         #self.circle_color = "red"
         for i in range(0,6):
             self.corners.append(self.hex_corner(i))
@@ -110,6 +112,9 @@ class Hexagon_Polar(pygame.sprite.Sprite):
         return int(((self.radius) * self.col) - self.radius)
         #return int(self.row * (self.hex_height()*2+2))'''
 
+    def get_s(self):
+        return -self.q-self.r
+
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.corners, 2)
         #pygame.draw.circle(screen, self.circle_color, self.position, self.radius)
@@ -118,6 +123,22 @@ class Hexagon_Polar(pygame.sprite.Sprite):
         if other.position.distance_to(self.position) < (self.radius + other.radius):
             return True
         return False
+
+    def neighbors_exists(self, coordmap):
+        neighbor_checks = [False, False, False, False, False, False]
+        for n in range(6):
+            if self.all_neighbors[n] in coordmap:
+                neighbor_checks[n] = True
+        return neighbor_checks
+        
+    def hex_direction(self, direction):
+        return self.all_neighbors[direction]
+    
+    def hex_add(self, vector):
+        return (self.q + vector.q, self.r + vector.r)
+    
+    def hex_neighbor(self, direction):
+        return self.hex_add(self.hex_direction(direction))
 
     def update(self, dt):
         pass

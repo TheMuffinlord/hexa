@@ -10,3 +10,7 @@ HEX_X_OFFSET = 1.75
 HEX_Y_OFFSET = 1.75
 
 INPUT_WAIT_TIMER = 0.3
+
+FACING_NAMES = {"down", "dl","ul", "up","ur","dr"}
+FACING_ANGLES = {0,60,120,180,240,300}
+

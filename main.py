@@ -31,26 +31,39 @@ def main():
     coordmap = []
     fill_map_polar(hexmap, coordmap)
     print(coordmap)
-    unit1 = hex_unit_polar(0,0,"player",60)
+    """ unit1 = hex_unit_polar(0,0,"player",60)
     unit1.active = True
     unit2 = hex_unit_polar(1,1, "player2", 120)
-    """unit3 = hex_unit(3,3,120)
+    unit3 = hex_unit(3,3,120)
     unit2 = hex_unit(4,4,180)
     unit5 = hex_unit(5,5,240)
     unit6 = hex_unit(6,6,300) """
     #print(len(hexmap))
     #debug_text2 = ""
+    team1 = fill_team(3,1)
+    team2 = fill_team(3,2)
+    #more steps needed before we go there
+    team1[0].active = True
+    active_unit = 0
+    all_units = len(team1) + len(team2)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
             elif event.type == pygame.KEYDOWN:
                 pressed_key = event.key
-                for item in updatable:
-                    if item.active == True:
-                        item.update(dt, pressed_key)
-                    elif item.active == False:
-                        item.active = True
+                if pressed_key == pygame.K_ESCAPE:
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+                else:
+                    for item in updatable:
+                        if item.active == True:
+                            item.update(dt, pressed_key)
+                            active_unit += 1
+                            if active_unit >= all_units:
+                                active_unit = 0
+                        elif item.active == False:
+                            if item.name == active_unit:
+                                item.active = True
 
         pygame.Surface.fill(screen, "black")
         for item in updatable:

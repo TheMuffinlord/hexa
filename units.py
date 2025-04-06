@@ -82,12 +82,14 @@ class hex_unit(Hexagon): #debating whether to remove this honestly
 
 #time for the polar express
 class hex_unit_polar(Hexagon_Polar):
-    def __init__(self, q, r, name, facing): #addl variables for later
+    def __init__(self, q, r, name, team): #addl variables for later
         super().__init__(q, r)
-        self.facing = facing
+        
         self.name = name
         self.active = False
         self.timer = 0
+        self.team = team
+        self.facing = self.initial_facing()
         #todo: add unit id; may go to further subclasses?
     
     def timer_check(self):
@@ -103,9 +105,19 @@ class hex_unit_polar(Hexagon_Polar):
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
+        
+    def draw(self, screen):
+        if self.active == True:
+            color = "yellow"
+        elif self.team == 1:
+            color = "blue"
+        elif self.team == 2:
+            color = "red"
+        else:
+            color = "white"
+        pygame.draw.polygon(screen, color, self.triangle())
 
-    def get_s(self):
-        return -self.q-self.r
+
 
     def bound_edges(self):
         low_edge = lambda x: max(-MAP_POLAR_SIZE, -x - MAP_POLAR_SIZE)
@@ -134,14 +146,17 @@ class hex_unit_polar(Hexagon_Polar):
         return bound_check(self.q) or bound_check(self.r) or bound_check(self.get_s())
 
     def check_facing(self):
-        return self.facing // 60
+        face = self.facing // 60
+        if face == 6:
+            face = 0
+        return face
 
-    def draw(self, screen):
-        if self.active == True:
-            color = "yellow"
-        else:
-            color = "white"
-        pygame.draw.polygon(screen, color, self.triangle())
+
+    def initial_facing(self):
+        if self.team == 1:
+            return 300
+        if self.team == 2:
+            return 120
 
     def rotate(self, lr):
         if self.timer_check():
@@ -157,7 +172,7 @@ class hex_unit_polar(Hexagon_Polar):
             if self.facing % 60 != 0:
                 self.facing = self.facing // 60
             self.timer = INPUT_WAIT_TIMER
-            self.active = False
+            self.set_inactive()
 
     #six commands to move in every direction
     def move_up(self):
@@ -211,7 +226,7 @@ class hex_unit_polar(Hexagon_Polar):
             if face == 5: #down right
                 self.move_dr()
             #self.wrap_edges()
-            self.active = False
+            self.set_inactive()
             self.timer = INPUT_WAIT_TIMER
 
     def move_back(self):
@@ -223,34 +238,32 @@ class hex_unit_polar(Hexagon_Polar):
         self.move_fwd()
         self.facing = old_facing
 
+    def set_inactive(self):
+        self.active = False
+
     def update(self, dt, keys):
         self.timer_tick(dt)
-        print("waiting on key press")
+        #print("waiting on key press")
         #if self.active:
         if keys == pygame.K_a:
-            print("A pressed")
+            #print("A pressed")
             self.rotate("l")
         elif keys == pygame.K_d:
-            print("D pressed")
+            #print("D pressed")
             self.rotate("r")
         elif keys == pygame.K_w:
-            print("W pressed")
+            #print("W pressed")
             self.move_fwd()
         elif keys== pygame.K_s:
-            print("S pressed")
+            #print("S pressed")
             self.move_back()
         elif keys == pygame.K_SPACE:
-            print("space bar pressed")
+            #print("space bar pressed")
             self.q = 0
             self.r = 0
-        elif keys == pygame.K_ESCAPE:
-            print("escape pressed, quitting")
-            pygame.event.post(pygame.event.Event(pygame.QUIT))
         elif keys:
-            self.active = False
+            self.set_inactive()
             
-
-
         self.position = pygame.Vector2(self.get_x(), self.get_y())
 
 
