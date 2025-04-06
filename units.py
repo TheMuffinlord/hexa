@@ -2,7 +2,7 @@ import pygame, math
 from constants import *
 from hexes import *
 
-class hex_unit(Hexagon):
+class hex_unit(Hexagon): #debating whether to remove this honestly
     def __init__(self, col, row, facing): #addl variables for later
         super().__init__(col, row)
         self.facing = facing
@@ -82,12 +82,17 @@ class hex_unit(Hexagon):
 
 #time for the polar express
 class hex_unit_polar(Hexagon_Polar):
-    def __init__(self, q, r, facing): #addl variables for later
+    def __init__(self, q, r, name, facing): #addl variables for later
         super().__init__(q, r)
         self.facing = facing
+        self.name = name
+        self.active = False
         self.timer = 0
         #todo: add unit id; may go to further subclasses?
     
+    def timer_check(self):
+        return self.timer <= 0
+
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.facing)
         right = pygame.Vector2(0, 1).rotate(self.facing + 90) * self.radius / 1.5
@@ -153,7 +158,7 @@ class hex_unit_polar(Hexagon_Polar):
         pygame.draw.polygon(screen, "white", self.triangle())
 
     def rotate(self, lr):
-        if self.timer <= 0:
+        if self.timer_check():
         #simple version to test logic
             if lr == "l":
                 self.facing -= 60
@@ -203,7 +208,7 @@ class hex_unit_polar(Hexagon_Polar):
             self.q -= 1
 
     def move_fwd(self):
-        if self.timer <= 0:
+        if self.timer_check():
         #oh boy now we hit that six directional logic
             face = self.check_facing()
             if face == 0 or face == 6: #down
@@ -233,15 +238,22 @@ class hex_unit_polar(Hexagon_Polar):
     def update(self, dt):
         self.timer -= dt
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            self.rotate("l")
-        if keys[pygame.K_d]:
-            self.rotate("r")
-        if keys[pygame.K_w]:
-            self.move_fwd()
-        if keys[pygame.K_s]:
-            self.move_back()
-        if keys[pygame.K_SPACE]:
-            self.q = 0
-            self.r = 0
-        self.position = pygame.Vector2(self.get_x(), self.get_y())
+        if keys:
+            if keys[pygame.K_a]:
+                self.rotate("l")
+            if keys[pygame.K_d]:
+                self.rotate("r")
+            if keys[pygame.K_w]:
+                self.move_fwd()
+            if keys[pygame.K_s]:
+                self.move_back()
+            if keys[pygame.K_SPACE]:
+                self.q = 0
+                self.r = 0
+            if keys[pygame.K_ESCAPE]:
+                pygame.event.post(pygame.event.Event(pygame.QUIT))
+            self.position = pygame.Vector2(self.get_x(), self.get_y())
+        self.active = False
+
+
+

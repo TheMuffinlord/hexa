@@ -18,9 +18,9 @@ def main():
     drawable = pygame.sprite.Group()
     updatable = pygame.sprite.Group()
 
-    Hexagon.containers = (drawable, updatable)
-    Hexagon_Polar.containers = (drawable, updatable)
-    hex_unit.containers = (drawable, updatable)
+    #Hexagon.containers = (drawable)
+    Hexagon_Polar.containers = (drawable)
+    hex_unit_polar.containers = (drawable, updatable)
 
     #hex1 = Hexagon(0,0)
     #for corner in hex1.corners:
@@ -31,24 +31,31 @@ def main():
     coordmap = []
     fill_map_polar(hexmap, coordmap)
     print(coordmap)
-    unit1 = hex_unit_polar(0,0,60)
-    """unit2 = hex_unit(2,2,60)
-    unit3 = hex_unit(3,3,120)
+    unit1 = hex_unit_polar(0,0,"player",60)
+    unit2 = hex_unit_polar(1,1, "player2", 120)
+    """unit3 = hex_unit(3,3,120)
     unit2 = hex_unit(4,4,180)
     unit5 = hex_unit(5,5,240)
     unit6 = hex_unit(6,6,300) """
     #print(len(hexmap))
+    debug_text2 = ""
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         pygame.Surface.fill(screen, "black")
         for item in updatable:
-            item.update(dt)
+            while item.active == True:
+                active_unit = item.name
+                debug_text2 = f"active unit: {active_unit}"
+                item.update(dt)
+            item.active = True
+
         for item in drawable:
             item.draw(screen)
-        debug_text = f" unit 1 q: {unit1.q},  unit 1 r: {unit1.r}"
-        debug_text2 = f"max_r :{max(-MAP_POLAR_SIZE, -unit1.q - MAP_POLAR_SIZE)} min_r: {min(MAP_POLAR_SIZE, -unit1.q + MAP_POLAR_SIZE)}"
+        
+        debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
+
         debug_box(screen, debug_text, debug_text2)
         pygame.display.flip()
         dt = clock.tick(60)/1000

@@ -1,7 +1,7 @@
 import pygame, math
 from constants import *
 
-class Hexagon(pygame.sprite.Sprite):
+class Hexagon(pygame.sprite.Sprite): #probably remove this. i can do math for pure xy coords now
     def __init__(self, col, row):
         if hasattr(self, "containers"):
             super().__init__(self.containers)
