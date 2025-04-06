@@ -107,29 +107,10 @@ class hex_unit_polar(Hexagon_Polar):
     def get_s(self):
         return -self.q-self.r
 
-    def wrap_edges(self):
-        '''max_r = max(-MAP_POLAR_SIZE, -self.q - MAP_POLAR_SIZE)
-        min_r = min(MAP_POLAR_SIZE, -self.q + MAP_POLAR_SIZE)
-        max_q = max(-MAP_POLAR_SIZE, -self.r - MAP_POLAR_SIZE)
-        min_q = min(MAP_POLAR_SIZE, -self.r + MAP_POLAR_SIZE)
-        if self.q < max_q:
-            self.q = min_q
-        if self.q > min_q:
-            self.q = max_q
-        if self.r < max_r:
-            self.r = min_r
-        if self.r > min_r:
-            self.r = max_r
-        ok so essentially if any value goes over the polar size
-        it needs to be cut back off. how do i do this and do it well'''
-        #ok i think i know what i need. if any value goes over the edge of the map
-        bound_check = lambda x: x not in range(-MAP_POLAR_SIZE, MAP_POLAR_SIZE+1)
+    def bound_edges(self):
         low_edge = lambda x: max(-MAP_POLAR_SIZE, -x - MAP_POLAR_SIZE)
         high_edge = lambda x: min(MAP_POLAR_SIZE, -x + MAP_POLAR_SIZE) + 1
-        print(f"{self.q}, {self.r}, {self.get_s()}")
-        print(f"q: {bound_check(self.q)}, r: {bound_check(self.r)}, s:{bound_check(-self.q-self.r)}")
-        print(f"facing: {self.check_facing()}")
-        if bound_check(self.q) or bound_check(self.r) or bound_check(self.get_s()):
+        if self.over_edge():
             facing = self.check_facing()
             if facing == 0 or facing == 6: #gotta find a way to do this that doesn't take two cases
                 self.r = low_edge(self.r)
@@ -147,8 +128,6 @@ class hex_unit_polar(Hexagon_Polar):
             if facing == 4:
                 self.r = high_edge(self.q)
                 self.q = high_edge(self.r)
-        #check facing
-        #depending on angle faced, 
     
     def over_edge(self):
         bound_check = lambda x: x not in range(-MAP_POLAR_SIZE, MAP_POLAR_SIZE+1)
@@ -161,7 +140,7 @@ class hex_unit_polar(Hexagon_Polar):
         pygame.draw.polygon(screen, "white", self.triangle())
 
     def rotate(self, lr):
-        if self.timer_check() and self.active:
+        if self.timer_check():
         #simple version to test logic
             if lr == "l":
                 self.facing -= 60
@@ -212,7 +191,7 @@ class hex_unit_polar(Hexagon_Polar):
             self.q -= 1
 
     def move_fwd(self):
-        if self.timer_check() and self.active:
+        if self.timer_check():
         #oh boy now we hit that six directional logic
             face = self.check_facing()
             if face == 0 or face == 6: #down
@@ -243,7 +222,8 @@ class hex_unit_polar(Hexagon_Polar):
     def update(self, dt):
         self.timer_tick(dt)
         keys = pygame.key.get_pressed()
-        #print("waiting on key press")
+        print("waiting on key press")
+        #if self.active:
         if keys[pygame.K_a]:
             print("A pressed")
             self.rotate("l")
@@ -263,6 +243,7 @@ class hex_unit_polar(Hexagon_Polar):
         elif keys[pygame.K_ESCAPE]:
             print("escape pressed, quitting")
             pygame.event.post(pygame.event.Event(pygame.QUIT))
+
 
         self.position = pygame.Vector2(self.get_x(), self.get_y())
 

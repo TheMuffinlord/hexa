@@ -45,15 +45,19 @@ def main():
                 return
         pygame.Surface.fill(screen, "black")
         for item in updatable:
-            if item.active == False:
-                item.active = True
+            if item.active == True:
                 active_unit = item.name
                 print(f"active unit: {active_unit}")
-                item.update(dt)        
+                item.update(dt)
+            if item.active == False:
+                if item.timer_check():
+                    item.active = True
+                else:
+                    item.timer_tick(dt)
         for item in drawable:
             item.draw(screen)
         
-        debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
+        #debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
 
         #debug_box(screen, debug_text, debug_text2)
         pygame.display.flip()
