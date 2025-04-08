@@ -45,7 +45,7 @@ def main():
     #more steps needed before we go there
     team1[0].active = True
     active_unit = 0
-    all_units = len(team1) + len(team2)
+    all_units = team1 + team2 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -56,14 +56,16 @@ def main():
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
                 else:
                     for item in updatable:
-                        if item.active == True:
+                        if item.active == True and item.name == all_units[active_unit].name:
                             item.update(dt, pressed_key)
-                            active_unit += 1
-                            if active_unit >= all_units:
-                                active_unit = 0
+                            if item.active == False:
+                                active_unit += 1
+                                if active_unit >= len(all_units):
+                                    active_unit = 0
                         elif item.active == False:
-                            if item.name == active_unit:
+                            if item.name == all_units[active_unit].name:
                                 item.active = True
+                                item.energize()
 
         pygame.Surface.fill(screen, "black")
         for item in updatable:

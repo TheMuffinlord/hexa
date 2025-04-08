@@ -89,6 +89,7 @@ class hex_unit_polar(Hexagon_Polar):
         self.active = False
         self.timer = 0
         self.team = team
+        self.energy = UNIT_MAX_ENERGY
         self.facing = self.initial_facing()
         #todo: add unit id; may go to further subclasses?
     
@@ -239,7 +240,13 @@ class hex_unit_polar(Hexagon_Polar):
         self.facing = old_facing
 
     def set_inactive(self):
-        self.active = False
+        if self.energy <= 0:
+            self.active = False
+        else:
+            self.energy -= 1
+
+    def energize(self):
+        self.energy = UNIT_MAX_ENERGY
 
     def update(self, dt, keys):
         self.timer_tick(dt)
