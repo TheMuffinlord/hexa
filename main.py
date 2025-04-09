@@ -46,6 +46,7 @@ def main():
     team1[0].active = True
     active_unit = 0
     all_units = team1 + team2 
+    round_started = True
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -62,12 +63,19 @@ def main():
                                 active_unit += 1
                                 if active_unit >= len(all_units):
                                     active_unit = 0
+                                    round_started = True
+                                else:
+                                    round_started = False
                         elif item.active == False:
                             if item.name == all_units[active_unit].name:
                                 item.active = True
                                 item.energize()
         debug_text = f"active unit: {all_units[active_unit].name}"
-        debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
+        if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
+            debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
+        else: 
+            debug_text2 = "Next round started, hit any key"
+
         pygame.Surface.fill(screen, "black")
         for item in updatable:
             item.update(dt, None)
