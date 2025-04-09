@@ -36,7 +36,7 @@ def fill_team(team_size, team):
         r_inc = 1
         tn = team_size
     for t in range(team_size):        
-        team_list.append(hex_unit_polar(q, r, t+tn, team))
+        team_list.append(hex_unit_polar(q, r, f"team{team}unit{t}", team))
         q += q_inc
         r += r_inc
     return team_list

@@ -66,7 +66,8 @@ def main():
                             if item.name == all_units[active_unit].name:
                                 item.active = True
                                 item.energize()
-
+        debug_text = f"active unit: {all_units[active_unit].name}"
+        debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
         pygame.Surface.fill(screen, "black")
         for item in updatable:
             item.update(dt, None)
@@ -75,7 +76,7 @@ def main():
         
         #debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
 
-        #debug_box(screen, debug_text, debug_text2)
+        debug_box(screen, debug_text, debug_text2)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk
