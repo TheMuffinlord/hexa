@@ -16,9 +16,9 @@ def main():
    
 
     drawable = pygame.sprite.Group()
-    units = pygame.sprite.Group()
-
-
+    updatable = pygame.sprite.Group()
+    moved_units = pygame.sprite.Group()
+    #Hexagon.containers = (drawable)
     Hexagon_Polar.containers = (drawable)
     hex_unit_polar.containers = (drawable, units)
 
@@ -70,23 +70,10 @@ def main():
 
 
         if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
-            debug_text[1] = f"remaining energy: {all_units[active_unit].energy + 1}" 
-            r_c_increment = True
+            debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
         else: 
-            debug_text[1] = "Next round started, hit a key"
-            if r_c_increment == True: #lol otherwise it just counts every wasted second and now you're on round 60000000
-                round_counter += 1
-                r_c_increment = False
+            debug_text2 = "Next round started, hit any key"
 
-        debug_text[6] = f"round: {round_counter}"
-        #the simplest neighbor check i can think of
-        """debug_text[0] = "neighbors:"
-        active_neighbors = all_units[active_unit].neighbors_exists(coordmap)
-        for n in range(len(active_neighbors)):
-            if active_neighbors[n] == True:
-                debug_text[n+1] = f"{n}: open"
-            else:
-                debug_text[n+1] = f"{n}: blocked" """
         pygame.Surface.fill(screen, "black")
         for item in units:
             item.update(dt, None)
