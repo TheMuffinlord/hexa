@@ -41,7 +41,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN: #going to have to put mouse logic in ehre too
                 pressed_key = event.key
                 if pressed_key == pygame.K_ESCAPE:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
