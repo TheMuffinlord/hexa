@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame
 from constants import *
 from hexes import *
 from units import *
@@ -16,33 +16,22 @@ def main():
    
 
     drawable = pygame.sprite.Group()
-    updatable = pygame.sprite.Group()
-    moved_units = pygame.sprite.Group()
-    #Hexagon.containers = (drawable)
-    Hexagon_Polar.containers = (drawable)
-    hex_unit_polar.containers = (drawable, updatable)
+    units = pygame.sprite.Group()
+    
 
-    #hex1 = Hexagon(0,0)
-    #for corner in hex1.corners:
-    #    print(corner)
-    #print(hex1.hex_width())
-    #hex2 = Hexagon(1,1)
+    Hexagon_Polar.containers = (drawable)
+    hex_unit_polar.containers = (drawable, units)
+
+
+    center_hex = Hexagon_Polar(0,0,False)
     hexmap = []
     coordmap = []
     fill_map_polar(hexmap, coordmap)
-    print(coordmap)
-    """ unit1 = hex_unit_polar(0,0,"player",60)
-    unit1.active = True
-    unit2 = hex_unit_polar(1,1, "player2", 120)
-    unit3 = hex_unit(3,3,120)
-    unit2 = hex_unit(4,4,180)
-    unit5 = hex_unit(5,5,240)
-    unit6 = hex_unit(6,6,300) """
-    #print(len(hexmap))
-    #debug_text2 = ""
+    #print(coordmap)
+    debug_text = ["whoops", "you broke it", "line 3", "line 4", "", "", "line 7"] #ugh i gotta make this scalable
     team1 = fill_team(3,1)
     team2 = fill_team(3,2)
-    #more steps needed before we go there
+
     team1[0].active = True
     active_unit = 0
     all_units = team1 + team2 
@@ -56,10 +45,14 @@ def main():
                 if pressed_key == pygame.K_ESCAPE:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
                 else:
-                    for item in updatable:
+                    for item in units:
                         if item.active == True and item.name == all_units[active_unit].name:
+                            round_started = False
                             item.update(dt, pressed_key)
+                            #center_line = all_units[active_unit].hex_line(center_hex)
+                            #green_line = all_units[active_unit].line_draw(center_line)
                             if item.active == False:
+                                #green_line = all_units[active_unit].line_draw(center_line, False)
                                 active_unit += 1
                                 if active_unit >= len(all_units):
                                     active_unit = 0
@@ -70,21 +63,32 @@ def main():
                             if item.name == all_units[active_unit].name:
                                 item.active = True
                                 item.energize()
-        debug_text = f"active unit: {all_units[active_unit].name}"
-        if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
-            debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
-        else: 
-            debug_text2 = "Next round started, hit any key"
+        debug_text[0] = f"active unit: {all_units[active_unit].name}"
+        #debug_text[2] = f"dist to center: {all_units[active_unit].hex_distance(center_hex)}"
+        
 
+
+        if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
+            debug_text[1] = f"remaining energy: {all_units[active_unit].energy + 1}" 
+        else: 
+            debug_text[1] = "Next round started, hit a key"
+        #the simplest neighbor check i can think of
+        """debug_text[0] = "neighbors:"
+        active_neighbors = all_units[active_unit].neighbors_exists(coordmap)
+        for n in range(len(active_neighbors)):
+            if active_neighbors[n] == True:
+                debug_text[n+1] = f"{n}: open"
+            else:
+                debug_text[n+1] = f"{n}: blocked" """
         pygame.Surface.fill(screen, "black")
-        for item in updatable:
+        for item in units:
             item.update(dt, None)
         for item in drawable:
             item.draw(screen)
         
         #debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
 
-        debug_box(screen, debug_text, debug_text2)
+        debug_box(screen, debug_text)
         pygame.display.flip()
         dt = clock.tick(60)/1000
     #fukken idk
