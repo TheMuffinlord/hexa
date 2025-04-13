@@ -16,9 +16,9 @@ def main():
    
 
     drawable = pygame.sprite.Group()
-    updatable = pygame.sprite.Group()
-    moved_units = pygame.sprite.Group()
-    #Hexagon.containers = (drawable)
+    units = pygame.sprite.Group()
+    
+    
     Hexagon_Polar.containers = (drawable)
     hex_unit_polar.containers = (drawable, units)
 
