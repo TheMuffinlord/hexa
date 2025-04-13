@@ -37,6 +37,7 @@ def main():
     all_units = team1 + team2 
     round_started = True
     round_counter = 1
+    green_line = []
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -50,10 +51,11 @@ def main():
                         if item.active == True and item.name == all_units[active_unit].name:
                             round_started = False
                             item.update(dt, pressed_key)
-                            #center_line = all_units[active_unit].hex_line(center_hex)
-                            #green_line = all_units[active_unit].line_draw(center_line)
+                            center_line = all_units[active_unit].hex_line(center_hex)
+                            green_line = all_units[active_unit].line_draw(center_line, False, green_line)
+                            green_line = all_units[active_unit].line_draw(center_line)
                             if item.active == False:
-                                #green_line = all_units[active_unit].line_draw(center_line, False)
+                                
                                 active_unit += 1
                                 if active_unit >= len(all_units):
                                     active_unit = 0
@@ -65,14 +67,14 @@ def main():
                                 item.active = True
                                 item.energize()
         debug_text[0] = f"active unit: {all_units[active_unit].name}"
-        #debug_text[2] = f"dist to center: {all_units[active_unit].hex_distance(center_hex)}"
+        debug_text[2] = f"dist to center: {all_units[active_unit].hex_distance(center_hex)}"
         
 
 
         if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
-            debug_text2 = f"remaining energy: {all_units[active_unit].energy}" #i gotta find a better way to put these together but by god it's working for now
+            debug_text[1] = f"remaining energy: {all_units[active_unit].energy + 1}" 
         else: 
-            debug_text2 = "Next round started, hit any key"
+            debug_text[1] = "Next round started, hit any key"
 
         pygame.Surface.fill(screen, "black")
         for item in units:
