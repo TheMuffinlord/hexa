@@ -62,26 +62,22 @@ class Hexagon(pygame.sprite.Sprite): #probably remove this. i can do math for pu
         pass
 
 class Hexagon_Polar(pygame.sprite.Sprite):
-    def __init__(self, q, r):
+    def __init__(self, q, r, drawn=True, color="white"):
         if hasattr(self, "containers"):
             super().__init__(self.containers)
         else:
             super().__init__()
-        #self.position = pygame.Vector2(row*HEX_SIZE, col*HEX_SIZE)
         self.size = HEX_SIZE #zoom logic will go here eventually ig
         self.radius = int(self.size * math.cos(math.radians(30)))
-        #self.half_height = math.sqrt((self.size * 2) - (self.radius*2))
-        #pos_x = col * 
-        '''self.col = col
-        self.row = row'''
         self.q = q
         self.r = r
         self.s = (q * -1)-r #three dimension axial
+        self.drawn = drawn #visibility toggle
+        self.color = color
         self.position = pygame.Vector2(self.get_x(), self.get_y())
         self.corners = []
-        self.all_neighbors = [(self.q+1, self.r), (self.q+1, self.r-1), (self.q, self.r-1), (self.q-1, self.r), (self.q-1, self.r+1), (self.q, self.r+1)]
+        self.all_neighbors = self.update_neighbors()
         self.valid_neighbors = []
-        #self.circle_color = "red"
         for i in range(0,6):
             self.corners.append(self.hex_corner(i))
         
@@ -116,7 +112,8 @@ class Hexagon_Polar(pygame.sprite.Sprite):
         return -self.q-self.r
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.corners, 2)
+        if self.drawn == True:
+            pygame.draw.polygon(screen, self.color, self.corners, 2)
         #pygame.draw.circle(screen, self.circle_color, self.position, self.radius)
 
     def collision(self, other):
@@ -124,7 +121,10 @@ class Hexagon_Polar(pygame.sprite.Sprite):
             return True
         return False
 
-    def neighbors_exists(self, coordmap):
+    def update_neighbors(self): #working
+        return [(self.q+1, self.r), (self.q+1, self.r-1), (self.q, self.r-1), (self.q-1, self.r), (self.q-1, self.r+1), (self.q, self.r+1)]
+
+    def neighbors_exists(self, coordmap): #working, would be cool if it checked for facing
         neighbor_checks = [False, False, False, False, False, False]
         for n in range(6):
             if self.all_neighbors[n] in coordmap:
@@ -134,11 +134,59 @@ class Hexagon_Polar(pygame.sprite.Sprite):
     def hex_direction(self, direction):
         return self.all_neighbors[direction]
     
-    def hex_add(self, vector):
-        return (self.q + vector.q, self.r + vector.r)
+    def hex_add(self, other):
+        return (self.q + other.q, self.r + other.r)
     
     def hex_neighbor(self, direction):
         return self.hex_add(self.hex_direction(direction))
+    
+    def hex_subtract(self, other): #working
+        return (self.q - other.q, self.r - other.r)
+    
+    def hex_distance(self, other): #working
+        distance = self.hex_subtract(other)
+        return (abs(distance[0]) + abs(distance[0] + distance[1]) + abs(distance[1]))//2
+
+    def hex_lerp(self, other, inter_distance):
+        point_lerp = lambda a, b, t: a + (b - a) * t
+        return (point_lerp(self.q, other.q, inter_distance), point_lerp(self.r, other.r, inter_distance))
+    
+    def hex_round(self, other):
+        q = round(other[0])
+        r = round(other[1])
+        s = round(-other[0] - other[1])
+        q_d = abs(q - other[0])
+        r_d = abs(r - other[1])
+        s_d = abs(s - (-other[0]-other[1]))
+        if q_d > r_d and q_d > s_d:
+            q = -r-s
+        elif r_d > s_d:
+            r = -q-s
+        return (int(q), int(r))
+
+    def hex_line(self, other):
+        dist = self.hex_distance(other)
+        results = []
+        for i in range(0, dist+1):
+            results.append(self.hex_round(self.hex_lerp(other, 1/dist * i)))
+        return results
+    
+    def line_draw(self, hexlist, recolor=True, line_list=[]):
+        if recolor == True:
+            for hex in hexlist:
+                line_list.append(Hexagon_Polar(hex[0], hex[1], True, "green"))
+        elif recolor == False:
+            for hex in range(len(line_list)):
+                pygame.sprite.Sprite.kill(line_list[hex])
+            line_list = []
+        return line_list
+                
+
+    def check_facing(self): #moved from units, will be useful for multiple subclasses
+        face = self.facing // 60
+        if face == 6:
+            face = 0
+        return face
 
     def update(self, dt):
         pass

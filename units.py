@@ -146,11 +146,7 @@ class hex_unit_polar(Hexagon_Polar):
         bound_check = lambda x: x not in range(-MAP_POLAR_SIZE, MAP_POLAR_SIZE+1)
         return bound_check(self.q) or bound_check(self.r) or bound_check(self.get_s())
 
-    def check_facing(self):
-        face = self.facing // 60
-        if face == 6:
-            face = 0
-        return face
+
 
 
     def initial_facing(self):
@@ -269,9 +265,9 @@ class hex_unit_polar(Hexagon_Polar):
             self.q = 0
             self.r = 0
         elif keys:
-            self.set_inactive()
-            
+            self.set_inactive()    
         self.position = pygame.Vector2(self.get_x(), self.get_y())
+        self.all_neighbors = self.update_neighbors()
 
 
 
