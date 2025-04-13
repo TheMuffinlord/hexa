@@ -167,8 +167,9 @@ class Hexagon_Polar(pygame.sprite.Sprite):
     def hex_line(self, other):
         dist = self.hex_distance(other)
         results = []
-        for i in range(0, dist+1):
-            results.append(self.hex_round(self.hex_lerp(other, 1/dist * i)))
+        if dist != 0: #don't know why this suddenly broke but i'd rather this than /0 errors
+            for i in range(0, dist+1):
+                results.append(self.hex_round(self.hex_lerp(other, 1/dist * i)))
         return results
     
     def line_draw(self, hexlist, recolor=True, line_list=[]):

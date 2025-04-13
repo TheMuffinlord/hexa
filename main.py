@@ -68,14 +68,17 @@ def main():
                                 item.energize()
         debug_text[0] = f"active unit: {all_units[active_unit].name}"
         debug_text[2] = f"dist to center: {all_units[active_unit].hex_distance(center_hex)}"
-        
-
 
         if round_started == False or (round_started == True and all_units[active_unit].energy > 0): #this is it i found the exact conditions
-            debug_text[1] = f"remaining energy: {all_units[active_unit].energy + 1}" 
+            debug_text[1] = f"remaining energy: {all_units[active_unit].energy + 1}"
+            r_c_increment = True 
         else: 
             debug_text[1] = "Next round started, hit any key"
+            if r_c_increment == True: #lol otherwise it just counts every wasted second and now you're on round 60000000
+                round_counter += 1
+                r_c_increment = False
 
+        debug_text[6] = f"round: {round_counter}"        
         pygame.Surface.fill(screen, "black")
         for item in units:
             item.update(dt, None)
@@ -83,6 +86,14 @@ def main():
             item.draw(screen)
         
         #debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
+        #the simplest neighbor check i can think of
+        """debug_text[0] = "neighbors:"
+        active_neighbors = all_units[active_unit].neighbors_exists(coordmap)
+        for n in range(len(active_neighbors)):
+            if active_neighbors[n] == True:
+                debug_text[n+1] = f"{n}: open"
+            else:
+                debug_text[n+1] = f"{n}: blocked" """
 
         debug_box(screen, debug_text)
         pygame.display.flip()
