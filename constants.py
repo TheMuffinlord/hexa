@@ -14,4 +14,4 @@ INPUT_WAIT_TIMER = 0.3
 FACING_NAMES = {"down", "dl","ul", "up","ur","dr"}
 FACING_ANGLES = {0,60,120,180,240,300}
 
-UNIT_MAX_ENERGY = 4
+UNIT_MAX_ENERGY = 10

@@ -89,7 +89,10 @@ class hex_unit_polar(Hexagon_Polar):
         self.active = False
         self.timer = 0
         self.team = team
+        self.playable = True
+        self.offset= (0,0)
         self.energy = UNIT_MAX_ENERGY
+        self.max_energy = UNIT_MAX_ENERGY
         self.facing = self.initial_facing()
         #todo: add unit id; may go to further subclasses?
     
@@ -156,20 +159,20 @@ class hex_unit_polar(Hexagon_Polar):
             return 120
 
     def rotate(self, lr):
-        if self.timer_check():
+        #if self.timer_check():
         #simple version to test logic
-            if lr == "l":
-                self.facing -= 60
-            if lr == "r":
-                self.facing += 60
-            if self.facing > 360:
-                self.facing -= 360
-            if self.facing < 0:
-                self.facing += 360
-            if self.facing % 60 != 0:
-                self.facing = self.facing // 60
-            self.timer = INPUT_WAIT_TIMER
-            self.set_inactive()
+        if lr == "l":
+            self.facing -= 60
+        if lr == "r":
+            self.facing += 60
+        if self.facing > 360:
+            self.facing -= 360
+        if self.facing < 0:
+            self.facing += 360
+        if self.facing % 60 != 0:
+            self.facing = self.facing // 60
+        #self.timer = INPUT_WAIT_TIMER
+        self.set_inactive(1)
 
     #six commands to move in every direction
     def move_up(self):
@@ -207,24 +210,24 @@ class hex_unit_polar(Hexagon_Polar):
             self.q -= 1
 
     def move_fwd(self):
-        if self.timer_check():
+        #if self.timer_check():
         #oh boy now we hit that six directional logic
-            face = self.check_facing()
-            if face == 0 or face == 6: #down
-                self.move_down()
-            if face == 3: #up
-                self.move_up()
-            if face == 1: #down left
-                self.move_dl()
-            if face == 2: #up left
-                self.move_ul()
-            if face == 4: #up right
-                self.move_ur()
-            if face == 5: #down right
-                self.move_dr()
-            #self.wrap_edges()
-            self.set_inactive()
-            self.timer = INPUT_WAIT_TIMER
+        face = self.check_facing()
+        if face == 0 or face == 6: #down
+            self.move_down()
+        if face == 3: #up
+            self.move_up()
+        if face == 1: #down left
+            self.move_dl()
+        if face == 2: #up left
+            self.move_ul()
+        if face == 4: #up right
+            self.move_ur()
+        if face == 5: #down right
+            self.move_dr()
+        #self.wrap_edges()
+        self.set_inactive(2)
+        #self.timer = INPUT_WAIT_TIMER
 
     def move_back(self):
         #hey y'all wanna see some bullshit
@@ -232,23 +235,23 @@ class hex_unit_polar(Hexagon_Polar):
         self.facing -= 180
         if self.facing < 0:
             self.facing += 360
-        self.move_fwd()
+        self.move_fwd(2)
         self.facing = old_facing
 
-    def set_inactive(self):
-        if self.energy <= 0:
+    def set_inactive(self, used_energy):
+        if self.energy <= 0 or self.energy < used_energy:
             self.active = False
         else:
-            self.energy -= 1
+            self.energy -= used_energy
 
     def energize(self):
         self.energy = UNIT_MAX_ENERGY
 
-    def update(self, dt, keys):
-        self.timer_tick(dt)
+    def update(self, dt, keys=None):
+        #self.timer_tick(dt)
         #print("waiting on key press")
         #if self.active:
-        if keys == pygame.K_a:
+        """ if keys == pygame.K_a:
             #print("A pressed")
             self.rotate("l")
         elif keys == pygame.K_d:
@@ -265,7 +268,7 @@ class hex_unit_polar(Hexagon_Polar):
             self.q = 0
             self.r = 0
         elif keys:
-            self.set_inactive()    
+            self.set_inactive() """    
         self.position = pygame.Vector2(self.get_x(), self.get_y())
         self.all_neighbors = self.update_neighbors()
 

@@ -74,6 +74,7 @@ class Hexagon_Polar(pygame.sprite.Sprite):
         self.s = (q * -1)-r #three dimension axial
         self.drawn = drawn #visibility toggle
         self.color = color
+        self.offset = (0,0)#for later
         self.position = pygame.Vector2(self.get_x(), self.get_y())
         self.corners = []
         self.all_neighbors = self.update_neighbors()

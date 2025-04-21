@@ -10,7 +10,9 @@ from constants import *
             new_hex = Hexagon(col, row)
             hexmap.append(new_hex) """
 
-def fill_map_polar(hex_map, coord_map):
+def fill_map_polar():
+    hex_map = []
+    coord_map = []
     for q in range(-MAP_POLAR_SIZE, MAP_POLAR_SIZE+1):
         r_low = max(-MAP_POLAR_SIZE, -q - MAP_POLAR_SIZE)
         r_high = min(MAP_POLAR_SIZE, -q + MAP_POLAR_SIZE) + 1
@@ -20,6 +22,7 @@ def fill_map_polar(hex_map, coord_map):
             coord_map.append((q, r))
     for hex in hex_map:
         hex.valid_neighbors = hex.neighbors_exists(coord_map)
+    return [hex_map, coord_map]
 
 def fill_team(team_size, team):
     team_list = []

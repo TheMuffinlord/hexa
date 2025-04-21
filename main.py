@@ -4,6 +4,8 @@ from hexes import *
 from units import *
 from mapgen import *
 from textbox import *
+from maingameloop import *
+
 
 def main():
     pygame.init()
@@ -15,24 +17,28 @@ def main():
     #doing p good not to eat shit at this stage
    
 
-    drawable = pygame.sprite.Group()
-    units = pygame.sprite.Group()
+    #drawable = pygame.sprite.Group()
+    #units = pygame.sprite.Group()
     
     
-    Hexagon_Polar.containers = (drawable)
-    hex_unit_polar.containers = (drawable, units)
+    #Hexagon_Polar.containers = (drawable)
+    #hex_unit_polar.containers = (drawable, units)
 
 
     center_hex = Hexagon_Polar(0,0,False)
     hexmap = []
     coordmap = []
-    fill_map_polar(hexmap, coordmap)
+    maps = fill_map_polar()
+    hexmap = maps[0]
+    coordmap = maps[1]
     #print(coordmap)
     debug_text = ["whoops", "you broke it", "line 3", "line 4", "", "", "line 7"] #ugh i gotta make this scalable
     team1 = fill_team(3,1)
     team2 = fill_team(3,2)
 
-    team1[0].active = True
+    battle_screen(team1, team2, screen, hexmap, clock, dt)
+
+    """ team1[0].active = True
     active_unit = 0
     all_units = team1 + team2 
     round_started = True
@@ -87,17 +93,17 @@ def main():
         
         #debug_text = f"unit 1: {unit1.active},  unit 2: {unit2.active}"
         #the simplest neighbor check i can think of
-        """debug_text[0] = "neighbors:"
+        debug_text[0] = "neighbors:"
         active_neighbors = all_units[active_unit].neighbors_exists(coordmap)
         for n in range(len(active_neighbors)):
             if active_neighbors[n] == True:
                 debug_text[n+1] = f"{n}: open"
             else:
-                debug_text[n+1] = f"{n}: blocked" """
+                debug_text[n+1] = f"{n}: blocked" 
 
         debug_box(screen, debug_text)
         pygame.display.flip()
-        dt = clock.tick(60)/1000
+        dt = clock.tick(60)/1000"""
     #fukken idk
 
 if __name__ == "__main__":
